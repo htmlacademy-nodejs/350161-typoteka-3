@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Антон Тюрин](https://up.htmlacademy.ru/nodejs/3/user/350161).
-* Наставник: `Неизвестно`.
+* Наставник: [Константин Серебрянский](https://htmlacademy.ru/profile/id185658).
 
 ---
 
