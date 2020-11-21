@@ -5,7 +5,8 @@ const {
   shuffle,
   getFormattedDateFromMs,
 } = require(`../../utils`);
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
+const chalk = require(`chalk`);
 
 const DEFAULT_COUNT = 1;
 const MAX_OFFERS_VALUE = 1000;
@@ -78,17 +79,22 @@ const generateOffers = (count) => (
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     const content = JSON.stringify(generateOffers(countOffer));
-    fs.writeFile(FILE_NAME, content, (err) => {
-      if (err) {
-        return console.error(`Can't write data to file...`);
-      } else if (countOffer > MAX_OFFERS_VALUE) {
-        return console.error(`Не больше 1000 публикаций`);
+    try {
+      if (countOffer > MAX_OFFERS_VALUE) {
+        throw new RangeError(`Не больше 1000 публикаций`);
       }
-      return console.info(`Operation success. File created.`);
-    });
+      await fs.writeFile(FILE_NAME, content);
+      console.log(chalk.green(`Operation success. File created.`));
+    } catch (err) {
+      if (err instanceof RangeError) {
+        console.error(chalk.red(err.message));
+      } else {
+        console.error(chalk.red(`Can't write data to file...`));
+      }
+    }
   }
 };
